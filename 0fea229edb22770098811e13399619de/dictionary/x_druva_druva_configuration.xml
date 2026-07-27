@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" db_object_id="b3da1e011be186101cfebbbc0a4bcb3c" extends="sys_metadata" label="Configuration" max_length="40" name="x_druva_druva_configuration" type="collection">
+        <element choice="1" label="Type" max_length="40" name="type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Mapping" value="mapping"/>
+                <element inactive_on_update="false" label="Auth" value="auth"/>
+                <element inactive_on_update="false" label="Token" value="token"/>
+                <element inactive_on_update="false" label="Scheduler" value="scheduler"/>
+                <element inactive_on_update="false" label="IncidentConfig" value="incidentConfig"/>
+            </choice>
+        </element>
+        <element label="Value" max_length="1000" name="value" type="string_full_utf8"/>
+        <element label="Key" max_length="255" name="key" type="string_full_utf8"/>
+        <element display="true" label="Label" max_length="40" name="label" type="string"/>
+    </element>
+</database>

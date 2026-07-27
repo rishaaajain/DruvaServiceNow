@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="ais_search_profile_ais_dictionary_m2m">
+    <ais_search_profile_ais_dictionary_m2m action="INSERT_OR_UPDATE">
+        <dictionary display_value="x_druva_druva_ra_itsm_ai_search_profile_default_spell_check_dictionary">dc0a0cd10f4172103e9213e300d1b2d3</dictionary>
+        <dictionary_reference_qualifier/>
+        <marked_for_deletion>false</marked_for_deletion>
+        <profile display_value="[RA-ITSM] AI Search Profile">157240e8978aca10bacc3aece053afe7</profile>
+        <sys_class_name>ais_search_profile_ais_dictionary_m2m</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-11-05 08:00:03</sys_created_on>
+        <sys_id>e00a4cd10f4172103e9213e300d1b226</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_druva_druva_ra_itsm_ai_search_profile_default_spell_check_dictionary.[RA-ITSM] AI Search Profile</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>ais_search_profile_ais_dictionary_m2m_e00a4cd10f4172103e9213e300d1b226</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-11-05 08:00:03</sys_updated_on>
+    </ais_search_profile_ais_dictionary_m2m>
+</record_update>

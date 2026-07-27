@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_perspective">
+    <sys_perspective action="INSERT_OR_UPDATE">
+        <application/>
+        <applications>Druva,x_druva_druva</applications>
+        <name>Druva</name>
+        <order/>
+        <roles/>
+        <sys_class_name>sys_perspective</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-07-20 20:37:53</sys_created_on>
+        <sys_id>501d9e751bb49d10c19164a7b04bcbac</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Druva</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_perspective_501d9e751bb49d10c19164a7b04bcbac</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-07-20 20:40:20</sys_updated_on>
+    </sys_perspective>
+</record_update>

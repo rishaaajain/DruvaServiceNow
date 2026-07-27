@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[/*******************************************************************************************************************************************************
+  Author : Saurabh Mehta
+  Description : UI Page script from generating a dashboard for incident creation. 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+  VERSION     ISSUE-NUMBER             DATE              AUTHOR                      DETAILS                                                           
+   1.            -                     24-08-2019        Aman Jaiswal    
+   2.                                  24-03-2023        Saurabh Mehta
+*******************************************************************************************************************************************************/
+
+var app = angular.module('pageLoad', []);
+app.controller('pageLoadCtrl',function($scope) {
+	var dateConvertionFields = ["lastRun","maxGeneratedOn"];
+	var labelChangedFields = {"lastRun":"Last Sync Time","failureNumberSinceLastSuccess":"Number of failed attempts to open a ticket","maxGeneratedOn":"Next Sync time","isActive":"Status"};
+	var priorityMapping = ["urgency","severity","impact"];
+	var priority = [
+		{
+			"value": 1,
+			"name": "High"
+		}, {
+			"value": 2,
+			"name": "Medium"
+		}, {
+			"value": 3,
+			"name": "Low"
+		}]; 
+	$scope.incidentConfigData = {};
+	$scope.schedulerData ={};
+
+	$scope.onload = function(response) {
+		if(response!==undefined){
+			var label=[];
+			var graphData=[];
+			var answer = response.responseXML.documentElement.getAttribute("answer");
+			if(answer!==undefined && answer!=null){
+				var data = JSON.parse(answer);
+				data.forEach(function(map) {
+					switch(map.type){
+						case "scheduler":
+							if(dateConvertionFields.indexOf(map["key"])>=0 && map.value!="" && labelChangedFields[map["key"]]){
+								$scope.schedulerData[labelChangedFields[map["key"]].split(/(?=[A-Z])/).join(" ")] = moment.utc(map.value).format('YYYY-MM-DD HH:mm');
+							}
+							else{
+								if(labelChangedFields[map["key"]]){
+									$scope.schedulerData[labelChangedFields[map["key"]].split(/(?=[A-Z])/).join(" ")] = map.value;
+								}
+								else if(map["key"] =="interval")
+									$scope.schedulerData[map["key"].split(/(?=[A-Z])/).join(" ")] = map.label==null?map.value +" minutes":map.label;
+								else
+									$scope.schedulerData[map["key"].split(/(?=[A-Z])/).join(" ")] = map.label==null?map.value:map.label;
+							}
+							break;
+						case "incidentConfig":
+							if(priorityMapping.indexOf(map["key"])>=0){
+								priority.forEach(function(priorityVal){
+									if(priorityVal.value == map.value)
+									$scope.incidentConfigData[map["key"].split(/(?=[A-Z])/).join(" ")] = priorityVal.name;
+								});												 
+							}											 
+							else
+							$scope.incidentConfigData[map["key"].split(/(?=[A-Z])/).join(" ")] =  map.label==null?map.value:map.label;
+							break;
+						case "getCount":
+							label.push(map.key);
+							graphData.push(map.value);
+							break;
+					}
+				});
+			}
+			else
+			{
+				toastr.error("something went wrong.","error");
+			}
+			$scope.$apply();
+			$j('#loader').hide();
+			var ctx = document.getElementById('incidentChart').getContext('2d');
+			ctx.setLineDash([5, 10]);
+
+			// Draw a dashed line
+			ctx.beginPath();
+			ctx.moveTo(0, 0);
+			ctx.lineTo(100, 100);
+			ctx.stroke();
+			var myChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels:label,
+					datasets: [{
+						label: 'Incident created per day ',
+						data:graphData,
+						backgroundColor: [
+							'rgba(173,255,47,0.2)',
+							'rgba(255,140,0,0.2)',
+							'rgba(0,191,255,0.2)',
+							'rgba(255,20,147,0.2)',
+							'rgba(255,255,0,0.2)',
+							'rgba(176,196,222,0.2)',
+							'rgba(64,224,208,0.2)'
+						],
+						borderColor: [
+							'rgba(173,255,47,1)',
+							'rgba(255,140,0,1)',
+							'rgba(0,191,255,1)',
+							'rgba(255,20,147,1)',
+							'rgba(255,255,0,1)',
+							'rgba(176,196,222,1)',
+							'rgba(64,224,208,1)'
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					elements: {
+						line: {
+							tension: 0, // disables bezier curves
+							fill: false
+						}
+					},
+					legend: {
+						display: true,
+						text: 'Incident created in last 7 days'
+					},
+					scales: {
+						xAxes: [{
+							ticks: {
+								maxRotation: 90,
+								minRotation: 50
+							}
+						}],
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			});
+		}
+
+	};
+	//call getCount() of DruvaEngine
+	var getCount = new GlideAjax("DruvaEngine");
+	getCount.addParam("sysparm_name","getCount");
+	getCount.getXML($scope.onload);
+});]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_druva_druva_Dashboard.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<link href="${gs.getMessage(gs.getProperty('x_druva_druva.configcss'))}" rel="stylesheet" type="text/css" />
+	<link href="${gs.getMessage(gs.getProperty('x_druva_druva.bootstrapcss'))}" rel="stylesheet" type="text/css" />
+	<link href="${gs.getMessage(gs.getProperty('x_druva_druva.toastrcss'))}" rel="stylesheet" type="text/css" />
+	<style>
+		*, *::before, *::after{
+		font-size: 10px;
+		}
+	</style>
+	<g:requires name="x_druva_druva.ToastrJs.jsdbx" params="cache=$[HTML:jvar_stamp]" />
+	<g:requires name="x_druva_druva.BootstrapJs.jsdbx" params="cache=$[HTML:jvar_stamp]" />
+	<g:requires name="x_druva_druva.AngularJs.jsdbx" params="cache=$[HTML:jvar_stamp]" />
+	<g:requires name="x_druva_druva.ChartJs.jsdbx" params="cache=$[HTML:jvar_stamp]" />
+	<g:requires name="x_druva_druva.MomentJs.jsdbx" params="cache=$[HTML:jvar_stamp]" />
+	<g:macro_invoke macro="x_druva_druva_HeaderMacro" />
+	<div class="loader" id="loader"></div>
+	<div ng-app="pageLoad" ng-controller="pageLoadCtrl">
+		<div data-ng-init="onloadFun()">
+			<div class="container-fluid mt-5">
+				<div class="row">
+					<div class="col-sm col-md-10">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">Incident History</h4>
+							</div>    
+							<div class="w-50 p-3" style="margin: 0 auto;display: block;">
+								<canvas id="incidentChart" class="mt-2"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm col-md-5">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">Configuration Summary</h4>
+							</div>
+							<div ng-repeat="(key, value) in incidentConfigData">
+								<span class="panel-heading text-capitalize cust-font">{{key}}</span><span class="pull-right strong panel-title pr-3">{{value}}</span><br></br>
+							</div>	
+						</div>
+					</div>
+					<div class="col-sm col-md-5">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">Scheduler Details</h4>
+							</div>
+							<div ng-repeat="(key, value) in schedulerData">
+								<span class="panel-heading text-capitalize cust-font">{{key}}</span>
+								<span class="pull-right text-capitalize strong panel-title pr-3">{{value}}</span><br></br>
+							</div>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<g:macro_invoke macro="x_druva_druva_FooterMacro"/>
+</j:jelly>]]></html>
+        <name>Dashboard</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-23 10:16:07</sys_created_on>
+        <sys_id>92ab9bb9dbbeff0098811e1339961905</sys_id>
+        <sys_mod_count>351</sys_mod_count>
+        <sys_name>Dashboard</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_ui_page_92ab9bb9dbbeff0098811e1339961905</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-24 07:04:13</sys_updated_on>
+    </sys_ui_page>
+</record_update>

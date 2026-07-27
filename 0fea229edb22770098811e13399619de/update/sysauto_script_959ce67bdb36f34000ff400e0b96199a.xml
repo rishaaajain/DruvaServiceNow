@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>true</advanced>
+        <business_calendar/>
+        <condition><![CDATA[/*******************************************************************************************************************************************************
+  Author : Aman Jaiswal
+  Description : Scheduler checks condition after every 2 minutes wheter to call API for getting alert of backup failure or not. 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+  VERSION     ISSUE-NUMBER             DATE              AUTHOR                      DETAILS                                                           
+   1.            -                     24-08-2019        Aman Jaiswal                                                                                                                                                              
+*******************************************************************************************************************************************************/
+
+var answer = true;
+var currDateTime = new GlideDateTime();
+var lastRun;
+var isFirstRun = false;
+var interval;
+var isActive;
+var user;
+var nextRun;
+gs.info("Executing the script");
+var rec = new GlideRecord('x_druva_druva_configuration'); // getting configuration records and check whether to run a scheduler
+rec.query(); 
+while(rec.next()) {
+	switch(rec.getValue('key')){
+		case 'lastRun':
+			if(rec.getValue('value')){
+				lastRun = new GlideDateTime(rec.getValue('value'));
+			}	
+			else {
+				lastRun = new GlideDateTime();
+				isFirstRun = true;
+			}
+			break;
+		case 'interval':
+			if(rec.getValue('value')!=='')
+				interval = rec.getValue('value');
+			else
+				interval = false;
+			break;
+		case 'isActive':
+			isActive = rec.getValue('value')=='true'?true:false;
+			break;
+		case 'user':
+			if(rec.getValue('value')!=='')
+				user = rec.getValue('value');
+			else 
+				user = false;
+			break;
+	}
+}
+if(!interval || !user || !isActive){ // checks interval,user,isactive exists for running a scheduler  .
+	answer = false;
+}
+else{
+	var intervalTime = parseInt(interval) * 60;
+	lastRun.addSeconds(intervalTime);
+	nextRun =new GlideDateTime(lastRun);
+	if(isFirstRun) // checks condition to run first-time
+		answer = true;
+	else if(nextRun <= currDateTime) // checks condition to run scheduler after first-time.
+		answer = true;
+	else
+		answer = false;
+}
+answer;
+]]></condition>
+        <conditional>true</conditional>
+        <entered_run_end/>
+        <entered_run_start/>
+        <entered_time/>
+        <max_drift/>
+        <name>FetchAlerts</name>
+        <offset/>
+        <offset_type/>
+        <repeat_every/>
+        <run_as/>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_daysofweek/>
+        <run_end/>
+        <run_month>1</run_month>
+        <run_period>1970-01-01 00:01:00</run_period>
+        <run_start>2019-09-16 19:51:13</run_start>
+        <run_time>1970-01-01 08:00:00</run_time>
+        <run_type>periodically</run_type>
+        <run_weekinmonth>1</run_weekinmonth>
+        <script><![CDATA[/*******************************************************************************************************************************************************
+  Author : Saurabh Mehta
+  Description : Scheduler executed if condition is true and alerts are fetched via backup failure API. Additionally, creating an incident if backup                     failure alert is recevied via API 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+  VERSION     ISSUE-NUMBER             DATE              AUTHOR                      DETAILS                                                           
+   1.            -                     24-08-2019        Aman Jaiswal                                                                                                                                                              
+*******************************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Updated By : Saurabh Mehta
+ Purpose : To update the records of configuration table.
+ Modified Date : 18-10-2022
+ Description : In this method we are updating the last run, maxGeneratedOn and minGeneratedOn value in configuration table.  
+ </summary>
+ <returns type="string"> Mapping Records </returns>
+ 
+ *******************************************************************************************************************************************************/
+
+function updateConfigurationRecord(){
+	var rec = new GlideRecordSecure('x_druva_druva_configuration');
+	rec.query(); 
+	while(rec.next()) {
+		switch(rec.getValue('key')){
+			case 'maxGeneratedOn':
+				var getCurrentDate = new GlideDateTime();
+				getCurrentDate.addSeconds(configurationRecord.interval * 60);
+				maxGeneratedOnIsoVal =new GlideDateTime(getCurrentDate);
+				rec.value = new Date(maxGeneratedOnIsoVal.getNumericValue()).toISOString();
+				break;
+			case 'minGeneratedOn':
+				rec.value = configurationRecord.maxGeneratedOn;
+				break;
+			case 'lastRun':
+				rec.value = new GlideDateTime();
+				break;
+		}
+		rec.update();
+	}
+}
+
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Updated By : Saurabh Mehta
+ Purpose : To Create the records in Incident table.
+ Modified Date : 18-10-2022
+ Description : In this method we are inserting a incident record that are return by getAlert().  
+ </summary>
+ <returns type="string"> Mapping Records </returns>
+ 
+ *******************************************************************************************************************************************************/
+function insertIncidents(alertRecords) {
+	Object.keys(alertRecords.alerts).forEach(function(key) {
+		var shortDescriptionVal = {};
+		var descriptionVal = {};
+
+		Object.keys(incidentMappingRecord).forEach(function(keys) {
+			incidentMappingRecord[keys].forEach(function(item) {
+				if (alertRecords.alerts[key].hasOwnProperty(item)) {
+					if (keys == 'short_description') {
+						shortDescriptionVal[item] =
+							alertRecords.alerts[key][item];
+					}
+					else {
+						descriptionVal[item] =
+							alertRecords.alerts[key][item];
+					}
+				}
+			});
+		});
+
+		var resourceName =
+			shortDescriptionVal.resourceName || '';
+		
+		var setResourceNameAsCI =
+			configurationRecord.setResourceNameAsCI === 'true' ||
+			configurationRecord.setResourceNameAsCI === '1' ||
+			configurationRecord.setResourceNameAsCI === true;
+
+		var gr = new GlideRecordSecure(
+			'x_druva_druva_staging_alerts'
+		);
+		gr.initialize();
+
+		gr.short_description =
+			JSON.stringify(shortDescriptionVal);
+		gr.description =
+			JSON.stringify(descriptionVal);
+		gr.user = configurationRecord.user;
+		gr.user_group = configurationRecord.userGroup;
+		gr.business_service =
+			configurationRecord.businessService;
+		gr.impact = configurationRecord.impact;
+		gr.urgency = configurationRecord.urgency;
+		gr.severity = configurationRecord.severity;
+
+		gr.setValue('resourcename', resourceName);
+
+		gr.setValue(
+			'channel_type',
+			configurationRecord.channelType || ''
+		);
+
+		gr.setValue(
+			'set_resource_name_as_ci',
+			setResourceNameAsCI ? '1' : '0'
+		);
+
+
+		var insertedSysId = gr.insert();
+
+		if (insertedSysId) {
+			gs.info(
+				'Staging alert created successfully: ' +
+				insertedSysId
+			);
+		}
+		else {
+			gs.error(
+				'Failed to create staging alert: ' +
+				gr.getLastErrorMessage()
+			);
+		}
+	});
+}
+
+try{
+	// mapping of fields of Incident tbl with staging Alerts tbl
+	var getMappingRecords = new x_druva_druva.DruvaEngine().getMappingRecords();
+	var jsonMappingRecords = JSON.parse(getMappingRecords);
+	var incidentMappingRecord = {};
+
+	Object.keys(jsonMappingRecords).forEach(function(key){
+		if(incidentMappingRecord.hasOwnProperty(jsonMappingRecords[key].target_name)){	incidentMappingRecord[jsonMappingRecords[key].target_name].push(jsonMappingRecords[key].source_name);																		 }
+		else{
+			incidentMappingRecord[jsonMappingRecords[key].target_name] = [jsonMappingRecords[key].source_name];
+		}
+	});
+
+	// getting Configuration Record
+	var configurationRecord = {};
+	var rec = new GlideRecordSecure('x_druva_druva_configuration');
+	rec.query(); 
+	while(rec.next()) {
+		configurationRecord[rec.getValue('key')] = rec.getValue('value');
+	}
+	configurationRecord['pageToken'] = null;
+	
+    // getting access token
+	var access_token= new x_druva_druva.DruvaEngine().authenticateClient();
+	do {
+		// getting Alerts from API
+		var gettingAlert = new x_druva_druva.DruvaEngine().getAlert(access_token,configurationRecord);
+		var alertRecords = JSON.parse(gettingAlert);
+		gs.info("Number of alerts: " + alertRecords.alerts.length);
+		configurationRecord['pageToken'] = alertRecords.nextPageToken !== "" ? alertRecords.nextPageToken : null;
+		if(alertRecords.alerts.length>0){
+			insertIncidents(alertRecords);
+		}
+		else{
+			gs.info("No backup failure found");
+		}
+	}
+	while (alertRecords.nextPageToken !== "");
+	updateConfigurationRecord();
+}
+catch(ex){
+	gs.info("Error:: " + ex);
+}
+]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-29 11:55:04</sys_created_on>
+        <sys_id>959ce67bdb36f34000ff400e0b96199a</sys_id>
+        <sys_mod_count>428</sys_mod_count>
+        <sys_name>FetchAlerts</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sysauto_script_959ce67bdb36f34000ff400e0b96199a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-27 07:14:41</sys_updated_on>
+        <time_zone/>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>959ce67bdb36f34000ff400e0b96199a</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-07-24 09:03:26</sys_created_on>
+        <sys_id>b6237c7bff3a2210e729f8977c4fd963</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-19 13:05:12</sys_updated_on>
+        <table>sysauto_script</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_script">
+    <sys_transform_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <map display_value="IncidentMapping">4bbae167dbb3b70000ff400e0b9619de</map>
+        <order>100</order>
+        <script><![CDATA[(function runTransformScript(source, map, log, target) {
+
+	var config = new GlideRecord(
+		'x_druva_druva_configuration'
+	);
+
+	config.addQuery('key', 'channelType');
+	config.setLimit(1);
+	config.query();
+
+	if (config.next()) {
+		var channelType = config.getValue('value');
+
+		if (channelType) {
+			target.setValue(
+				'contact_type',
+				channelType
+			);
+		}
+	}
+
+})(source, map, log, target);]]></script>
+        <sys_class_name>sys_transform_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-17 07:01:48</sys_created_on>
+        <sys_id>575084cb3bce8b505b6f5aeaefc2929d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>onBefore</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_transform_script_575084cb3bce8b505b6f5aeaefc2929d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-17 07:01:48</sys_updated_on>
+        <when>onBefore</when>
+    </sys_transform_script>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>575084cb3bce8b505b6f5aeaefc2929d</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-17 07:01:48</sys_created_on>
+        <sys_id>f37088cb3bce8b505b6f5aeaefc292a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-17 07:01:48</sys_updated_on>
+        <table>sys_transform_script</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_druva_druva_configuration">
+    <x_druva_druva_configuration action="INSERT_OR_UPDATE">
+        <key>maxGeneratedOn</key>
+        <label/>
+        <sys_class_name>x_druva_druva_configuration</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-09-18 16:45:32</sys_created_on>
+        <sys_id>57f89a18db8c081000ff400e0b9619fd</sys_id>
+        <sys_mod_count>135335</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>x_druva_druva_configuration_57f89a18db8c081000ff400e0b9619fd</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-07-27 09:35:47</sys_updated_on>
+        <type>scheduler</type>
+        <value>2026-07-28T09:34:47.698Z</value>
+    </x_druva_druva_configuration>
+</record_update>

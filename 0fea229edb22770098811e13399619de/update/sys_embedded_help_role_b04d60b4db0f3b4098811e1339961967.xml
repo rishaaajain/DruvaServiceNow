@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_embedded_help_role">
+    <sys_embedded_help_role action="INSERT_OR_UPDATE">
+        <order>1000</order>
+        <role display_value="x_druva_druva.mapping_user" name="x_druva_druva.mapping_user">fc4d60b4db0f3b4098811e1339961964</role>
+        <sys_class_name>sys_embedded_help_role</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-08-01 05:08:52</sys_created_on>
+        <sys_id>b04d60b4db0f3b4098811e1339961967</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>fc4d60b4db0f3b4098811e1339961964</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_embedded_help_role_b04d60b4db0f3b4098811e1339961967</sys_update_name>
+        <sys_updated_by>drvconnector</sys_updated_by>
+        <sys_updated_on>2019-08-01 05:08:52</sys_updated_on>
+    </sys_embedded_help_role>
+</record_update>

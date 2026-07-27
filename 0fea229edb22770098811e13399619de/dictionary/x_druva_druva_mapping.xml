@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="37da1e011be186101cfebbbc0a4bcb53" label="Mapping" max_length="40" name="x_druva_druva_mapping" type="collection">
+        <element label="Source Label" max_length="255" name="source_label" type="string_full_utf8"/>
+        <element label="Target Label" max_length="255" name="target_label" type="string_full_utf8"/>
+        <element label="Target Name" max_length="40" name="target_name" type="string"/>
+        <element label="Source Name" max_length="255" name="source_name" type="string_full_utf8"/>
+    </element>
+</database>

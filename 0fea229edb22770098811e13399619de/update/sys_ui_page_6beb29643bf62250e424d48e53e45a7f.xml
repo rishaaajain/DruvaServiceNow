@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_druva_druva_App Privacy Policy.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- External Stylesheets -->
+    <link href="${gs.getMessage(gs.getProperty('x_druva_druva.configcss'))}" rel="stylesheet" />
+    <link href="${gs.getMessage(gs.getProperty('x_druva_druva.bootstrapcss'))}" rel="stylesheet" />
+    <link href="${gs.getMessage(gs.getProperty('x_druva_druva.toastrcss'))}" rel="stylesheet" />
+
+    <!-- JS Includes -->
+    <g:requires name="x_druva_druva.BootstrapJs.jsdbx" />
+
+    <!-- Font and Typography Styling -->
+    <style>
+        body, h1, h2, h3, h4, h5, h6, p, a, span, div {
+            font-family: 'Inter', sans-serif !important;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        p, a {
+            font-size: 17px;
+            font-weight: 400;
+        }
+        .mt-4 { margin-top: 1.5rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mb-3 { margin-bottom: 1rem; }
+    </style>
+
+    <!-- Header Macro -->
+    <g:macro_invoke macro="x_druva_druva_HeaderMacro" />
+	
+	<section style="background-color: white; padding: 10px 0;"></section>
+
+    <!-- Title Section -->
+    <section class="container-fluid" style="background-color:#0f294b; padding: 40px 0;">
+        <h1 style="color:white; text-align:center;">Druva Privacy Statement for Druva's ServiceNow App</h1>
+    </section>
+
+    <!-- Content Section -->
+    <section class="container mt-4 mb-4">
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    This Druva App for ServiceNow is designed to automatically create a ServiceNow ticket
+based on Customer's configurations. The Druva App does not pull any data from the
+ServiceNow environment. Instead, the Druva App for ServiceNow enables ServiceNow
+to pull Druva performance metadata from Druva's environment in order to create a
+ServiceNow ticket. For example if a Druva backup fails, the app will pull Druva's
+metadata about the failed backup and will create a ServiceNow ticket for that incident.
+                </p>
+				<p>
+				For more details on Druva's privacy practices, please visit <a href="https://www.druva.com/privacy-policy" target="_blank" rel="noopener noreferrer" style="margin-left: 5px;"> https://www.druva.com/privacy-policy.</a>
+				</p>
+				<p>
+				Last updated: July 21, 2025
+				</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Macro -->
+    <g:macro_invoke macro="x_druva_druva_FooterMacro" />
+
+</j:jelly>
+]]></html>
+        <name>App Privacy Policy</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-07-14 11:29:50</sys_created_on>
+        <sys_id>6beb29643bf62250e424d48e53e45a7f</sys_id>
+        <sys_mod_count>34</sys_mod_count>
+        <sys_name>App Privacy Policy</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_ui_page_6beb29643bf62250e424d48e53e45a7f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-24 06:56:19</sys_updated_on>
+    </sys_ui_page>
+</record_update>

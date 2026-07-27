@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_druva_druva_configuration">
+    <x_druva_druva_configuration action="INSERT_OR_UPDATE">
+        <key>target</key>
+        <label/>
+        <sys_class_name>x_druva_druva_configuration</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-09-18 16:46:17</sys_created_on>
+        <sys_id>1e2952d8db8c081000ff400e0b96195e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>x_druva_druva_configuration_1e2952d8db8c081000ff400e0b96195e</sys_update_name>
+        <sys_updated_by>drvconnector</sys_updated_by>
+        <sys_updated_on>2019-09-19 06:13:56</sys_updated_on>
+        <type>mapping</type>
+        <value>[ 
+ { 
+ "label":"Short Description",
+ "name":"short_description",
+ "fieldtype":"string",
+ "tablename":"Incident"
+ },
+ { 
+ "label":"Description",
+ "name":"description",
+ "fieldtype":"string",
+ "tablename":"Incident"
+ }
+]</value>
+    </x_druva_druva_configuration>
+</record_update>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-26 05:09:46</sys_created_on>
+        <sys_id>afe379bedbfab34098811e1339961914</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_druva_druva_configuration.x_druva_druva.manager</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_security_acl display_value="x_druva_druva_configuration">1fe3b5bedbfab34098811e13399619d5</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_afe379bedbfab34098811e1339961914</sys_update_name>
+        <sys_updated_by>drvconnector</sys_updated_by>
+        <sys_updated_on>2019-07-26 05:09:46</sys_updated_on>
+        <sys_user_role display_value="x_druva_druva.manager" name="x_druva_druva.manager">d5c8a3cadb7ebf0000ff400e0b9619b3</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

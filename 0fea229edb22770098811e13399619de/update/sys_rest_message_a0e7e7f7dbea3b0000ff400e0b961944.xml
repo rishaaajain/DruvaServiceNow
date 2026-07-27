@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_rest_message">
+    <sys_rest_message action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <authentication_type>no_authentication</authentication_type>
+        <basic_auth_password/>
+        <basic_auth_profile/>
+        <basic_auth_user/>
+        <description>This API will authenticate Client applictaion, using Client Id and Client screat key.</description>
+        <name>DruvaAuthentication</name>
+        <oauth2_profile/>
+        <protocol_name/>
+        <rest_endpoint>https://apis.druva.com/token</rest_endpoint>
+        <sys_class_name>sys_rest_message</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-17 06:03:20</sys_created_on>
+        <sys_id>a0e7e7f7dbea3b0000ff400e0b961944</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>DruvaAuthentication</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_rest_message_a0e7e7f7dbea3b0000ff400e0b961944</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-03-31 11:35:01</sys_updated_on>
+        <use_basic_auth>false</use_basic_auth>
+        <use_mutual_auth>false</use_mutual_auth>
+    </sys_rest_message>
+</record_update>

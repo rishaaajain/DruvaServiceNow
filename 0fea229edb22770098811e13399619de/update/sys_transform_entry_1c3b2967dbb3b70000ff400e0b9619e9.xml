@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_transform_entry">
+    <sys_transform_entry action="INSERT_OR_UPDATE">
+        <choice_action>create</choice_action>
+        <coalesce>false</coalesce>
+        <coalesce_case_sensitive>false</coalesce_case_sensitive>
+        <coalesce_empty_fields>false</coalesce_empty_fields>
+        <date_format>yyyy-MM-dd hh:mm:ss</date_format>
+        <map display_value="IncidentMapping">4bbae167dbb3b70000ff400e0b9619de</map>
+        <reference_value_field/>
+        <source_field>description</source_field>
+        <source_script><![CDATA[answer = (function transformEntry(source) {
+
+	// Add your code here
+	return ""; // return the value to be put into the target field
+
+})(source);]]></source_script>
+        <source_table>x_druva_druva_staging_alerts</source_table>
+        <sys_class_name>sys_transform_entry</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-09-16 05:29:50</sys_created_on>
+        <sys_id>1c3b2967dbb3b70000ff400e0b9619e9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>description</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_transform_entry_1c3b2967dbb3b70000ff400e0b9619e9</sys_update_name>
+        <sys_updated_by>drvconnector</sys_updated_by>
+        <sys_updated_on>2019-09-16 05:29:50</sys_updated_on>
+        <target_field>description</target_field>
+        <target_table>incident</target_table>
+        <use_source_script>false</use_source_script>
+    </sys_transform_entry>
+</record_update>

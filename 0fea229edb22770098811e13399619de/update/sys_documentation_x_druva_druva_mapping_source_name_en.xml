@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="source_name" label="Source Name" language="en" table="x_druva_druva_mapping">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>source_name</element>
+            <help/>
+            <hint/>
+            <label>Source Name</label>
+            <language>en</language>
+            <name>x_druva_druva_mapping</name>
+            <plural>Source Names</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-04-01 13:21:24</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Source Name</sys_name>
+            <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+            <sys_update_name>sys_documentation_x_druva_druva_mapping_source_name_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-04-01 13:21:24</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

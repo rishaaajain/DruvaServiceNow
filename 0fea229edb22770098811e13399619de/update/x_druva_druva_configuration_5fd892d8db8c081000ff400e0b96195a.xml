@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_druva_druva_configuration">
+    <x_druva_druva_configuration action="INSERT_OR_UPDATE">
+        <key>businessService</key>
+        <label>Bond Trading</label>
+        <sys_class_name>x_druva_druva_configuration</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-09-18 16:45:13</sys_created_on>
+        <sys_id>5fd892d8db8c081000ff400e0b96195a</sys_id>
+        <sys_mod_count>45</sys_mod_count>
+        <sys_name>Bond Trading</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>x_druva_druva_configuration_5fd892d8db8c081000ff400e0b96195a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-11-26 15:33:35</sys_updated_on>
+        <type>incidentConfig</type>
+        <value>451047c6c0a8016400de0ae6df9b9d76</value>
+    </x_druva_druva_configuration>
+</record_update>

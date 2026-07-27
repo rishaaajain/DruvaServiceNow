@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="type" table="x_druva_druva_configuration" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>type</element>
+            <name>x_druva_druva_configuration</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-04-01 13:21:23</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>type</sys_name>
+            <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+            <sys_update_name>sys_choice_x_druva_druva_configuration_type</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-04-01 13:21:23</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Auth</label>
+            <language>en</language>
+            <name>x_druva_druva_configuration</name>
+            <sequence/>
+            <synonyms/>
+            <sys_created_by>drvconnector</sys_created_by>
+            <sys_created_on>2019-07-26 05:12:45</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>drvconnector</sys_updated_by>
+            <sys_updated_on>2019-07-26 05:12:45</sys_updated_on>
+            <value>auth</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>IncidentConfig</label>
+            <language>en</language>
+            <name>x_druva_druva_configuration</name>
+            <sequence/>
+            <synonyms/>
+            <sys_created_by>drvconnector</sys_created_by>
+            <sys_created_on>2019-07-26 05:12:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>drvconnector</sys_updated_by>
+            <sys_updated_on>2019-07-26 05:12:33</sys_updated_on>
+            <value>incidentConfig</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Mapping</label>
+            <language>en</language>
+            <name>x_druva_druva_configuration</name>
+            <sequence/>
+            <synonyms/>
+            <sys_created_by>drvconnector</sys_created_by>
+            <sys_created_on>2019-07-31 07:35:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>drvconnector</sys_updated_by>
+            <sys_updated_on>2019-07-31 07:35:38</sys_updated_on>
+            <value>mapping</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Scheduler</label>
+            <language>en</language>
+            <name>x_druva_druva_configuration</name>
+            <sequence/>
+            <synonyms/>
+            <sys_created_by>drvconnector</sys_created_by>
+            <sys_created_on>2019-07-26 05:11:45</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>4</sys_mod_count>
+            <sys_updated_by>drvconnector</sys_updated_by>
+            <sys_updated_on>2019-08-11 18:01:53</sys_updated_on>
+            <value>scheduler</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Token</label>
+            <language>en</language>
+            <name>x_druva_druva_configuration</name>
+            <sequence/>
+            <synonyms/>
+            <sys_created_by>drvconnector</sys_created_by>
+            <sys_created_on>2019-07-31 06:49:24</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>drvconnector</sys_updated_by>
+            <sys_updated_on>2019-07-31 06:49:24</sys_updated_on>
+            <value>token</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>

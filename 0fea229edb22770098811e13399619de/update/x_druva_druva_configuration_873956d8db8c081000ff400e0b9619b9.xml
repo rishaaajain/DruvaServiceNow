@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_druva_druva_configuration">
+    <x_druva_druva_configuration action="INSERT_OR_UPDATE">
+        <key>source</key>
+        <label/>
+        <sys_class_name>x_druva_druva_configuration</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-09-18 16:46:31</sys_created_on>
+        <sys_id>873956d8db8c081000ff400e0b9619b9</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>x_druva_druva_configuration_873956d8db8c081000ff400e0b9619b9</sys_update_name>
+        <sys_updated_by>drvconnector</sys_updated_by>
+        <sys_updated_on>2019-10-01 09:53:26</sys_updated_on>
+        <type>mapping</type>
+        <value>[&#13;
+{&#13;
+"label":"ID",&#13;
+"name":"id",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Org ID",&#13;
+"name":"orgID",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Type",&#13;
+"name":"type",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Sub Type",&#13;
+"name":"subtype",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Generated On",&#13;
+"name":"generatedOn",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Severity",&#13;
+"name":"severity",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Status",&#13;
+"name":"status",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Resolution Time",&#13;
+"name":"resolutionTime",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Workload Type",&#13;
+"name":"workloadType",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Target Type",&#13;
+"name":"targetType",&#13;
+"fieldtype":"string",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Target ID",&#13;
+"name":"targetID",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Resource Type",&#13;
+"name":"resourceType",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Resource Name",&#13;
+"name":"resourceName",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Alert Details",&#13;
+"name":"alertDetails",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+},&#13;
+{&#13;
+"label":"Resource Info",&#13;
+"name":"resourceInfo",&#13;
+"fieldtype":"Integer",&#13;
+"tablename":"x_druva_druva_staging_alerts"&#13;
+}&#13;
+]</value>
+    </x_druva_druva_configuration>
+</record_update>

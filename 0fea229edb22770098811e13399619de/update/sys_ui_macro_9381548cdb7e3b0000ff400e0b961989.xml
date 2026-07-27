@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_macro">
+    <sys_ui_macro action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>general</category>
+        <description>This Macro is used for show Footer</description>
+        <media_type/>
+        <name>FooterMacro</name>
+        <scoped_name>x_druva_druva_FooterMacro</scoped_name>
+        <sys_class_name>sys_ui_macro</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-17 08:57:41</sys_created_on>
+        <sys_id>9381548cdb7e3b0000ff400e0b961989</sys_id>
+        <sys_mod_count>54</sys_mod_count>
+        <sys_name>FooterMacro</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_ui_macro_9381548cdb7e3b0000ff400e0b961989</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-07-15 06:32:21</sys_updated_on>
+        <xml><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<style> 
+		.text-color {
+		color: white;
+		}
+		#endfooter {
+		border-top: 1px solid #dddddd;
+		bottom: 0;
+		width: 100%;
+		position: fixed;
+		z-index: 10000000;
+		right: 0px;
+		}
+
+		div.vspacetiny {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		}
+
+		div.centered {
+		width: 100%;
+		margin: auto;
+		overflow: hidden;
+		position: relative;
+
+		}
+	</style>
+	<div id="endfooter" class="text-color bg-dark">
+		<div class="row">
+			<div class="centered vspacetiny col-sm col-md-9">
+				<p class="floatright" id="showYear">
+					<script> 
+						document.getElementById('showYear').innerHTML ='© '+ new Date().getFullYear() +' Druva All Rights Reserved' ;
+					</script>
+
+				</p>
+			</div>
+			<div class="col-sm col-md-3">
+				<a href="x_druva_druva_App Privacy Policy.do" class="text-white float-right mr-2"><p>App Privacy Policy</p></a>
+				<a href="x_druva_druva_Support.do" class="text-white float-right mr-4"><p>Contact Us   </p></a>
+			</div>
+		</div>
+	</div>
+</j:jelly>]]></xml>
+    </sys_ui_macro>
+</record_update>

@@ -24,7 +24,7 @@
         <scoped_administration>false</scoped_administration>
         <short_description/>
         <source>x_druva_druva</source>
-        <store_correlation_id>REPOAPP0002912657</store_correlation_id>
+        <store_correlation_id>REPOAPP0002915132</store_correlation_id>
         <store_url/>
         <subscription_entitlement/>
         <sys_class_name>sys_app</sys_class_name>
@@ -32,15 +32,15 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2019-07-12 09:37:23</sys_created_on>
         <sys_id>0fea229edb22770098811e13399619de</sys_id>
-        <sys_mod_count>122</sys_mod_count>
+        <sys_mod_count>124</sys_mod_count>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-07-27 10:41:51</sys_updated_on>
+        <sys_updated_on>2026-07-27 16:40:59</sys_updated_on>
         <template/>
         <trackable>true</trackable>
         <uninstall_blocked>false</uninstall_blocked>
         <user_role/>
         <vendor/>
         <vendor_prefix/>
-        <version>1.6.0</version>
+        <version>1.6.1</version>
     </sys_app>
 </record_update>
