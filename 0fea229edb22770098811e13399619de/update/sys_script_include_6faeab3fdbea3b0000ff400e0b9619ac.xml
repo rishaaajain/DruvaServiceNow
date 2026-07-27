@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_druva_druva.DruvaEngine</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description>This class will call apis and perform operations. </description>
+        <mobile_callable>false</mobile_callable>
+        <name>DruvaEngine</name>
+        <sandbox_callable>true</sandbox_callable>
+        <script><![CDATA[/*******************************************************************************************************************************************************
+  Author : Aman Jaiswal
+  Description : Class for performing operation on Configuration, Mapping, Getting access-token from API, Getting alert from API
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+  VERSION     ISSUE-NUMBER             DATE              AUTHOR                      DETAILS                                                           
+   1.            -                     24-08-2019        Aman Jaiswal                                                                                                                                                                                                                                     
+*******************************************************************************************************************************************************/
+
+var DruvaEngine = Class.create();
+DruvaEngine.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : To store the client key and secretKey in configruation Table.
+ Modified Date : 24-08-2019
+ Description : This method is calling an 'GetToken' API. If client key and secret key is valid, then we are storing these in configuration table. Additionally, we are returning response body from this method even if the result of     an API is success/failure.
+ </summary>
+ <param name="clientKey">clientKey</param> 
+ <param name="secretKey">secretKey </param>
+ <returns type="string">response body </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	getToken: function(clientKey,secretKey) {
+		try { 
+			//Rest Message => DruvaAuthentication =>GetToken('https://apis.druva.com/token')
+			var request = new sn_ws.RESTMessageV2('x_druva_druva.DruvaAuthentication', 'GetToken');
+			request.setHttpMethod("post");
+			request.setRequestHeader("authorization",'Basic ' + gs.base64Encode(clientKey + ':' + secretKey));
+
+			var response = request.execute();
+			var httpResponseBody = '';
+			if (response) {
+				var httpResponseStatus = response.getStatusCode();
+				if (httpResponseStatus == 200) {
+					var rec = new GlideRecordSecure('x_druva_druva_configuration');
+					rec.query(); 
+					while(rec.next()) {
+						if(rec.getValue('key')=='secret_key')
+							rec.value=gs.base64Encode(secretKey);
+						else if (rec.getValue('key')=='client_key')
+							rec.value= clientKey;
+						var updateResult = rec.update();
+
+						gs.info(
+							'[Druva Auth] key=' + rec.getValue('key') +
+							', record sys_id=' + rec.getUniqueValue() +
+							', updateResult=' + updateResult +
+							', canWrite=' + rec.canWrite() +
+							', valueCanWrite=' +
+								rec.getElement('value').canWrite() +
+							', error=' + rec.getLastErrorMessage()
+						);
+					}
+					httpResponseBody = response.getBody();
+				}
+				else {
+					httpResponseBody = response.getBody();
+				}
+			}
+			return httpResponseBody;
+		}
+		catch(ex) {
+			gs.error('Exception occurred::'+ ex);
+		}
+	},	
+	
+ /*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : This method is used to calling getToken() for getting access token.
+ Modified Date : 24-08-2019
+ Description :This method is called by UI page if sysparm_setParam is exists, otherwise it is called from FetchAlerts(Scheduled Script Execution) and return access token.
+ </summary>
+ <param name="sysparm_setParam">sysparm_setParam has a json value in which we pass clientkey and secret_key</param> 
+ <returns type="string">access token </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	authenticateClient: function() {
+		var response; 
+		if(this.getParameter('sysparm_setParam')){
+			var jsonData = JSON.parse(this.getParameter('sysparm_setParam'));
+
+			if(jsonData.hasOwnProperty("uidatasource")){
+				response = this.getToken(jsonData.client_key,jsonData.secret_key);
+				return response;
+			}
+		}
+		else{
+			var configurationRecord = {};
+			var rec = new GlideRecordSecure('x_druva_druva_configuration'); //getting configuration records
+			rec.query(); 
+			var records = [];
+			while(rec.next()) {
+				configurationRecord[rec.getValue('key')] = rec.getValue('value');
+			}
+			response = JSON.parse(this.getToken(configurationRecord.client_key,gs.base64Decode(configurationRecord.secret_key)));
+			if(response.hasOwnProperty("access_token") && response.hasOwnProperty("access_token")!=""){
+				return response.access_token;
+			}
+		}
+	},
+	
+	
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : This method is used to create incidents.
+ Modified Date : 24-08-2019
+ Description : This method is called by FetchAlerts(Scheduled Script Execution) to get an alert by calling 'BackupFailures' API. Creating an incident according to alerts received in API response.
+ </summary>
+ <param name="accessToken"> accessToken </param> 
+ <param name="configurationRecord"> configurationRecord </param> 
+ <returns type="string">response getBody </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	getAlert: function(accessToken,configurationRecord){
+		try { 
+			var requestBackupFailures = new sn_ws.RESTMessageV2('x_druva_druva.DruvaBackupFailures', 'BackupFailures');
+			requestBackupFailures.setQueryParameter("failureNumberSinceLastSuccess",configurationRecord.failureNumberSinceLastSuccess);
+			gs.info("failureNumberSinceLastSuccess " + configurationRecord.failureNumberSinceLastSuccess);
+			if(configurationRecord.maxGeneratedOn == null || configurationRecord.maxGeneratedOn==""){ // setting maxGeneration and minGeneration value
+				var getMaxGeneratedVal = new GlideDateTime();
+				configurationRecord.maxGeneratedOn = new Date(getMaxGeneratedVal.getNumericValue()).toISOString();
+				configurationRecord.minGeneratedOn = configurationRecord.maxGeneratedOn;
+			}
+			requestBackupFailures.setQueryParameter("maxGeneratedOn",configurationRecord.maxGeneratedOn);
+			gs.info("maxGeneratedOn " + configurationRecord.maxGeneratedOn);
+			requestBackupFailures.setQueryParameter("minGeneratedOn",configurationRecord.minGeneratedOn);
+			gs.info("minGeneratedOn" + configurationRecord.minGeneratedOn);
+			if(configurationRecord.pageToken !==null) // check condition for next page of alerts
+				requestBackupFailures.setQueryParameter("pageToken",configurationRecord.pageToken);
+
+			requestBackupFailures.setHttpMethod("get");
+			requestBackupFailures.setRequestHeader("authorization","Bearer "+ accessToken);
+
+			// Adding additional headers for tracing.
+			var platformVersion = gs.getProperty("glide.war") || null;
+			// Read app version from packaged property (Store-safe; no sys_app queries)
+			var appVersion = gs.getProperty("x_druva_druva.app.version", "");
+			
+			requestBackupFailures.setRequestHeader("xdrv-integration-name", "ServiceNow");
+			requestBackupFailures.setRequestHeader("xdrv-integration-version", platformVersion);
+			requestBackupFailures.setRequestHeader("xdrv-integration-type", "on-prem");
+			requestBackupFailures.setRequestHeader("xdrv-integration-app-version", appVersion);
+
+			var responseBackupFailures = requestBackupFailures.execute();
+			if (responseBackupFailures.getStatusCode() == 200)
+			{
+				return responseBackupFailures.getBody();
+			}
+			else{
+				return responseBackupFailures.getBody();
+			}
+		}
+		catch(ex) {
+			gs.error('Exception occured::'+ ex);
+		}
+	},
+	
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : To get the records from configuration table.
+ Modified Date : 24-08-2019
+ Description : This method returns configuration records. 
+ </summary>
+ <returns type="string"> Configuration Records </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	getConfigurationRecords: function(){
+		try {
+			var rec = new GlideRecordSecure('x_druva_druva_configuration');
+			rec.addQuery('type', '!=', 'Auth');
+			rec.addQuery('key', '!=', 'minGeneratedOn');
+			rec.query(); 
+			var records = [];
+			while(rec.next()) {
+				var temp = {
+					'key': rec.getValue('key'),
+					'value': rec.getValue('value'),
+					'type': rec.getValue('type'),
+					'label': rec.getValue('label'),
+					'tblname': 'x_druva_druva_configuration'
+				};
+				records.push(temp);
+			}
+			return JSON.stringify(records);
+		}
+		catch(ex) {
+			gs.error('Exception occured::'+ex);
+		}
+	},
+	
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : To display information on Dashboard.
+ Modified Date : 24-08-2019
+ Description : This method is called for displaying count of incident created per day till week, scheduler information and configuration record details.
+ </summary>
+ <returns type="string"> Configuration Records and coutn of incident per day in last week</returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	getCount:function(){
+		try {
+			var jsonConfigurationRecords = JSON.parse(this.getConfigurationRecords());	// getting configuration records 
+			var mapOfCount = {};
+			var count =new GlideAggregate('incident');
+			count.addAggregate('COUNT','sys_created_on');
+			count.query();
+			for(var countday = 0 ;countday <7;countday++){
+				getWeekStartDate = new GlideDateTime(gs.daysAgo(7-countday));
+				getWeekStartDate = getWeekStartDate.getDate().getByFormat("dd-MM-yyyy");
+				mapOfCount[getWeekStartDate] = 0;
+ 			}
+			while(count.next())
+			{
+				if ((count.sys_created_on >= gs.daysAgo(7))) { // get last 7 days incident records from current date.
+					var date = new GlideDateTime(count.sys_created_on);
+					var getWithDateFormat=date.getDate().getByFormat("dd-MM-yyyy");
+					var datecount = count.getAggregate('COUNT', 'sys_created_on');
+					if(mapOfCount.hasOwnProperty(getWithDateFormat)){
+						mapOfCount[getWithDateFormat] = parseInt(mapOfCount[getWithDateFormat]) + parseInt(datecount);
+					}
+					else{
+						mapOfCount[getWithDateFormat] = datecount==null || datecount==undefined ? 0 : parseInt(datecount);
+					}
+				}
+			}
+			for (var key in mapOfCount) {
+				var temp = {
+					'key': key,
+					'value': mapOfCount[key],
+					'type':'getCount'
+				};
+				jsonConfigurationRecords.push(temp);    //merge count of incident record per day till week with configuration record details     
+			}
+			return JSON.stringify(jsonConfigurationRecords);
+		}
+		catch(ex) {
+			gs.error('Exception occured::'+ex);
+		}
+	},
+
+	getIncidentContactTypes: function() {
+		var result = [];
+		var seenValues = {};
+
+		try {
+			var choiceGr = new GlideRecord('sys_choice');
+			choiceGr.addQuery('name', 'incident');
+			choiceGr.addQuery('element', 'contact_type');
+			choiceGr.addQuery('inactive', false);
+			choiceGr.addQuery('language', 'en');
+			choiceGr.orderBy('sequence');
+			choiceGr.orderBy('label');
+			choiceGr.query();
+			while (choiceGr.next()) {
+				result.push({
+					value: String(choiceGr.getValue('value')),
+					label: String(choiceGr.getValue('label'))
+				});
+			}
+		}
+		catch (ex) {
+			gs.error(
+				'[Druva Channel Type] Unable to load choices: ' +
+				ex
+			);
+		}
+
+		return JSON.stringify(result);
+	},
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : To upsert operation on configuration and mapping table.
+ Modified Date : 24-08-2019
+ Description : We are passing a sysparm_setParam(json) to this method. Upsert operation is performed on the fields according to the table name received via sysparm_setParam(json).
+ </summary>
+ <param name="sysparm_setParam"> sysparm_setParam </param> 
+ <returns type="string"> Configuration Records / Json String </returns>
+ 
+ *******************************************************************************************************************************************************/
+	_upsertConfigurationValue: function(key, value, type) {
+		var configGr = new GlideRecordSecure(
+			'x_druva_druva_configuration'
+		);
+
+		configGr.addQuery('key', key);
+		configGr.setLimit(1);
+		configGr.query();
+
+		if (configGr.next()) {
+			configGr.setValue(
+				'value',
+				value === null ||
+				typeof value === 'undefined' ?
+					'' :
+					String(value)
+			);
+
+			if (!configGr.getValue('type')) {
+				configGr.setValue(
+					'type',
+					type || 'IncidentConfig'
+				);
+			}
+
+			return configGr.update();
+		}
+
+		configGr.initialize();
+		configGr.setValue('key', key);
+		configGr.setValue(
+			'value',
+			value === null ||
+			typeof value === 'undefined' ?
+				'' :
+				String(value)
+		);
+		configGr.setValue(
+			'type',
+			type || 'IncidentConfig'
+		);
+
+		return configGr.insert();
+	},
+
+	upsertRecord: function(){
+		try {
+			var setParam= this.getParameter('sysparm_setParam');
+			switch(this.getParameter('sysparm_tableName')){
+				case 'x_druva_druva_configuration':
+					var jsonData = JSON.parse(setParam);
+					gs.info("Scheduler is activated:: " + jsonData.isActive);
+					gs.info("Scheduler information :: Scheduler interval = " + jsonData.interval + ", Number of failures before raising ticket = " + jsonData.failureNumberSinceLastSuccess);
+					var  jsonMapping = {};
+					Object.keys(jsonData).forEach(function(key){
+						if(key=='secret_key'){
+							jsonMapping[key] = gs.base64Encode(jsonData[key]);
+						}else{
+							jsonMapping[key] = jsonData[key];
+						}
+					});
+					var getConfiRecord = JSON.parse(this.getConfigurationRecords()); // getting configuration records 
+					var configurationRecord = {};
+					getConfiRecord.forEach(function(map){
+						configurationRecord[map.key] = map.value;
+					});
+					var rec = new GlideRecordSecure('x_druva_druva_configuration');
+					rec.query();
+					while(rec.next()) {
+						if(jsonMapping.hasOwnProperty(rec.getValue('key'))){
+							if(rec.getValue('key')=='user'){
+								rec.label = jsonData.userNameLabel;
+								jsonData.userNameLabel ? gs.info("User updated :: " +rec.label):null;
+								rec.value= jsonMapping[rec.getValue('key')];
+							}
+							else if (rec.getValue('key')=='userGroup'){
+								rec.label = jsonData.userGroupLabel;
+								jsonData.userGroupLabel ? gs.info("User Group updated :: " +rec.label) : null;
+								rec.value= jsonMapping[rec.getValue('key')];
+							}
+							else if (rec.getValue('key')=='businessService'){
+								rec.label = jsonData.businessServiceLabel;
+								jsonData.businessServiceLabel ? gs.info("Business service updated :: " +rec.label) : null;
+								rec.value= jsonMapping[rec.getValue('key')];
+							}	
+							else if(rec.getValue('key')=='maxGeneratedOn'){
+								if(rec.value!= null && jsonData.isActive && configurationRecord.lastRun !=''){
+									var setMaxGeneratedOn = new GlideDateTime(configurationRecord.lastRun); // setting maxGeneratedOn value
+									setMaxGeneratedOn.addSeconds(jsonData.interval * 60);
+									maxGeneratedOnIsoVal =new GlideDateTime(setMaxGeneratedOn);
+									rec.value = new Date(maxGeneratedOnIsoVal.getNumericValue()).toISOString();
+								}
+								else
+									rec.value = null;
+							}
+							else{
+								rec.value = jsonMapping[rec.getValue('key')];
+							}
+							rec.update();
+						}
+					}
+					if (jsonData.hasOwnProperty('channelType')) {
+						this._upsertConfigurationValue(
+							'channelType',
+							jsonData.channelType || '',
+							'IncidentConfig'
+						);
+					}
+
+					if (jsonData.hasOwnProperty('setResourceNameAsCI')) {
+						var setResourceNameAsCI =
+							jsonData.setResourceNameAsCI === true ||
+							String(
+								jsonData.setResourceNameAsCI
+							).toLowerCase() === 'true';
+
+						this._upsertConfigurationValue(
+							'setResourceNameAsCI',
+							setResourceNameAsCI ? 'true' : 'false',
+							'IncidentConfig'
+						);
+					}
+					
+					break;
+				case 'x_druva_druva_mapping':
+					var jsonMapTblRec = JSON.parse(setParam);
+					var countMappingRec = 0;
+					var grCountRec = new GlideAggregate('x_druva_druva_mapping');
+					grCountRec.addQuery('source_name', jsonMapTblRec.source.name);
+					grCountRec.addAggregate('COUNT');
+					grCountRec.query();
+					if (grCountRec.next())
+						countMappingRec = grCountRec.getAggregate('COUNT');
+					var gr = new GlideRecordSecure('x_druva_druva_mapping');
+					gr.addQuery('source_name', jsonMapTblRec.source.name);
+					gr.query();
+					if(countMappingRec > 0){
+						while (gr.next()) {// performing updation
+							gr.source_label = jsonMapTblRec.source.label;
+							gr.source_name = jsonMapTblRec.source.name;
+							gr.target_label = jsonMapTblRec.target.label;
+							gr.target_name = jsonMapTblRec.target.name;
+							gs.info("Updated mapping: Source- "+gr.source_label+", Target- "+gr.target_label);
+							gr.update();
+						}
+					}
+					else{
+						gr.initialize();// performing insertion
+						gr.source_label = jsonMapTblRec.source.label;
+						gr.source_name = jsonMapTblRec.source.name;
+						gr.target_label = jsonMapTblRec.target.label;
+						gr.target_name = jsonMapTblRec.target.name;
+						gs.info("Inserted mapping: Source- "+gr.source_label+", Target- "+gr.target_label);
+						gr.insert();
+					}
+					return this.getMappingRecords();
+				default:
+					break;
+			}
+
+			return  JSON.stringify({"status":"sucess"});
+		}
+		catch(ex) {
+			gs.error('Exception occured::'+ex);
+		}
+	},
+	
+/*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+  Purpose : To delete operation on configuration and mapping table.
+ Modified Date : 24-08-2019
+ Description : We are passing a sysparm_setParam(json) to this method. Delete operation is performed on the table received via sysparm_setParam(json).
+ </summary>
+ <param name="sysparm_setParam"> sysparm_setParam </param> 
+ <returns type="string"> Configuration Records/ Mapping Records/ Json String </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	deleteRecord: function(){
+		try {
+			var setParam= this.getParameter('sysparm_setParam');
+			switch(this.getParameter('sysparm_tableName')){
+				case 'x_druva_druva_configuration':
+					break;
+				case 'x_druva_druva_mapping':
+					try {
+						var jsonMapTblRec = JSON.parse(setParam);
+						
+						var countMappingRec = 0;
+						var grCountRec = new GlideAggregate('x_druva_druva_mapping');
+						grCountRec.addQuery('source_name', jsonMapTblRec.rec.source_name);
+						grCountRec.addAggregate('COUNT');
+						grCountRec.query();
+						if (grCountRec.next())
+							countMappingRec = grCountRec.getAggregate('COUNT');
+						var gr = new GlideRecordSecure('x_druva_druva_mapping');
+						gr.addQuery('source_name', jsonMapTblRec.rec.source_name);
+						gr.query();
+						if(countMappingRec > 0){
+							while (gr.next()) {
+								gs.info("Deleted mapping: Source- "+gr.source_label+", Target- "+gr.target_label);
+								gr.deleteRecord();
+							}
+						}
+						return this.getMappingRecords();
+					}
+					catch(ex){
+						gs.error('Exception occured::'+ex);
+						return  JSON.stringify({"status":"false"});
+					}
+					break;
+				default:
+					break;
+			}
+			return  JSON.stringify({"status":"sucess"});
+		}
+		catch(ex) {
+			gs.error('Exception occured::'+ex);
+		}
+	},
+
+ /*******************************************************************************************************************************************************
+ <summary>
+ Created By : Aman Jaiswal
+ Purpose : To get the records from mapping table.
+ Modified Date : 24-08-2019
+ Description : This method returns mapping records.  
+ </summary>
+ <returns type="string"> Mapping Records </returns>
+ 
+ *******************************************************************************************************************************************************/
+	
+	getMappingRecords: function(){
+		var rec = new GlideRecordSecure('x_druva_druva_mapping');
+		rec.query();
+		var records = [];
+		while(rec.next()) {
+			var temp = {
+				'source_label': rec.getValue('source_label'),
+				'source_name': rec.getValue('source_name'),
+				'target_label': rec.getValue('target_label'),
+				'target_name': rec.getValue('target_name'),
+				'tblname': 'x_druva_druva_mapping'
+			};
+			records.push(temp);
+		}
+		return JSON.stringify(records);
+	},
+	type: 'DruvaEngine'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>drvconnector</sys_created_by>
+        <sys_created_on>2019-07-17 06:26:14</sys_created_on>
+        <sys_id>6faeab3fdbea3b0000ff400e0b9619ac</sys_id>
+        <sys_mod_count>700</sys_mod_count>
+        <sys_name>DruvaEngine</sys_name>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>sys_script_include_6faeab3fdbea3b0000ff400e0b9619ac</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-27 05:27:53</sys_updated_on>
+    </sys_script_include>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>6faeab3fdbea3b0000ff400e0b9619ac</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-09-26 11:50:15</sys_created_on>
+        <sys_id>a21f72d00f5c7a103e9213e300d1b29b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-09-26 11:50:15</sys_updated_on>
+        <table>sys_script_include</table>
+        <use_es_latest>false</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

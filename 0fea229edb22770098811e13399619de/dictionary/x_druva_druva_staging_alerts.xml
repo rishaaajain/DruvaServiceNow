@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="2bdada011be186101cfebbbc0a4bcbfb" extends="sys_import_set_row" label="Staging Alerts" max_length="40" name="x_druva_druva_staging_alerts" type="collection">
+        <element label="ResourceType" max_length="255" name="resourcetype" type="string_full_utf8"/>
+        <element choice="1" label="SubType" max_length="40" name="subtype" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="BackupFailure" value="backupFailure"/>
+            </choice>
+        </element>
+        <element label="User" max_length="255" name="user" type="string_full_utf8"/>
+        <element label="Id" max_length="40" name="id" type="integer"/>
+        <element label="Impact" max_length="255" name="impact" type="string_full_utf8"/>
+        <element label="Severity" max_length="255" name="severity" type="string_full_utf8"/>
+        <element label="TargetType" max_length="255" name="targettype" type="string_full_utf8"/>
+        <element label="User Group" max_length="255" name="user_group" type="string_full_utf8"/>
+        <element label="Channel Type" max_length="255" name="channel_type" type="string"/>
+        <element choice="1" label="WorkloadType" max_length="40" name="workloadtype" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="hyperv" value="hyperv"/>
+                <element inactive_on_update="false" label="nas" value="nas"/>
+                <element inactive_on_update="false" label="oracle" value="oracle"/>
+                <element inactive_on_update="false" label="sql" value="sql"/>
+                <element inactive_on_update="false" label="fs" value="fs"/>
+                <element inactive_on_update="false" label="vmware" value="vmware"/>
+            </choice>
+        </element>
+        <element label="OrgId" max_length="40" name="orgid" type="integer"/>
+        <element display="true" label="Short Description" max_length="1000" name="short_description" type="string_full_utf8"/>
+        <element choice="1" label="Type" max_length="40" name="type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Jobs" value="jobs"/>
+            </choice>
+        </element>
+        <element label="Urgency" max_length="255" name="urgency" type="string_full_utf8"/>
+        <element label="Configuration Item" max_length="40" name="set_resource_name_as_ci" type="boolean"/>
+        <element label="Business Service" max_length="255" name="business_service" type="string_full_utf8"/>
+        <element label="Description" max_length="1000" name="description" type="string_full_utf8"/>
+        <element label="ResourceName" max_length="255" name="resourcename" type="string_full_utf8"/>
+        <element choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Active" value="active"/>
+                <element inactive_on_update="false" label="InActive" value="inactive"/>
+            </choice>
+        </element>
+    </element>
+</database>

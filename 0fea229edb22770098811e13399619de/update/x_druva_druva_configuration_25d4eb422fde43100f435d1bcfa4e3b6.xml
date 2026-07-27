@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_druva_druva_configuration">
+    <x_druva_druva_configuration action="INSERT_OR_UPDATE">
+        <key>setResourceNameAsCI</key>
+        <label/>
+        <sys_class_name>x_druva_druva_configuration</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-27 07:21:13</sys_created_on>
+        <sys_id>25d4eb422fde43100f435d1bcfa4e3b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Druva" source="x_druva_druva">0fea229edb22770098811e13399619de</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Druva">0fea229edb22770098811e13399619de</sys_scope>
+        <sys_update_name>x_druva_druva_configuration_25d4eb422fde43100f435d1bcfa4e3b6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-27 07:21:13</sys_updated_on>
+        <type>IncidentConfig</type>
+        <value>false</value>
+    </x_druva_druva_configuration>
+</record_update>
